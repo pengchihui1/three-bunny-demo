@@ -14,6 +14,8 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css"
       type="text/css"
     />
+
+    <link href="../index.css" rel="stylesheet">
     
     <style>
         body{
@@ -22,11 +24,12 @@
             padding:0;
             overflow: hidden;
         }
-        #score,#seconds {
-            width: 4rem;
+        #score,#seconds,#startButton  {
+            width: 80px;
             font-size: medium;
             border-radius: 0.2rem;
             border: none;
+            margin: 2px;
         }
 
         #score,#seconds,#startButton {
@@ -34,7 +37,6 @@
             color: white;
             padding: 5px;
             border: 1px solid white;
-            border-radius: 8%;
         }
 
         #toast_content_bg{
@@ -50,16 +52,47 @@
       <script  src="./js/camera.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden">
-   <div id="three" style="position: relative; ">
-    <div style="position: fixed; top: 10px; right: 2vw;  color: red;">
-        <p id="seconds" >秒數：30</p>
-        <p id="score" >分數：0</p>
-        <button id="startButton" style="width: 76px;">背景音樂</button>
+
+  <img src="../logo.png" class=" w-10 h-10 m-2 rounded-full" alt="" id="openLogoModal"/>
+
+  <!-- This example requires Tailwind CSS v2.0+ -->
+  <div class="relative z-10 hidden" id="logoModal" aria-labelledby="modal-title" role="dialog" aria-modal="true" >
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+  
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+      <div class="flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0">
+        <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
+          <div>
+            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+             <img src="../logo.png" class=" rounded-full" alt=""/>
+            </div>
+            <div class="mt-3 text-center sm:mt-5">
+              <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">地域蛋糕</h3>
+              <div class="mt-2">
+                <p class="text-sm text-gray-500">地域蛋糕-專門製作各種蛋糕：javascript蛋糕、react蛋糕、nodejs蛋糕應有盡有。</p>
+              </div>
+            </div>
+          </div>
+          <div class="mt-5 sm:mt-6 flex justify-around">
+            <button type="button" class=" text-blue-500"><a href='https://region.mo/'>前往官方網站</a></button>
+            <button type="button" class="" id="closeLogoModal">關閉</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <video style="position: absolute; left: 0; top: 0; width: 100vw;  height: 100vh; z-index:-100; "/>
+    <div id="three" style="position: relative;">
+      <div style="display: flex; flex-direction: column; align-items: flex-end;  position: fixed; top: 10px; right: 2vw;">
+        <p id="seconds" >秒數：30</p>
+        <p id="score" >分數：0</p>
+        <p id="startButton" >背景音樂</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <video style="position: absolute; left: 0; top: 0; width: 100%;  height: 100%; z-index:-100; "/>
   
   <audio id="backgroundMusic" loop  preload="auto" style="border: 1px solid black; padding: 5px; display: none" ><source src="14028.mp3" type="audio/mp3"> </audio>
   <audio id="rabbitMusic" preload="auto" style="display: none">  <source src="14289.mp3" type="audio/mp3"> </audio>
@@ -108,14 +141,15 @@
     // mixer 和動畫有關
     let mixer1,mixer2,mixer3;
 
-    // 調試網絡速度
-    // function someMethodIThinkMightBeSlow() {
-    //     const startTime = performance.now();
-    //     // Do the normal stuff for this function
-    //     const duration = performance.now() - startTime;
-    //     console.log(`someMethodIThinkMightBeSlow took ${duration}ms`);
-    // }
-  
+    const logoModal = document.getElementById("logoModal");
+    $('#openLogoModal').click(()=>{
+      logoModal.style.display = "block";
+    })
+
+    $('#closeLogoModal').click(()=>{
+      logoModal.style.display = "none";
+    })
+
     // 倒计时计分
     function timers(){
         seconds=30
@@ -455,16 +489,18 @@
         }
     }
 
+    //  開始的提示
     startGame();
-function startGame(){
-      textToast('AR需要取用你的運動傳感器',{
-          faded:false,
-          isbg:true,
-          type:'show',
-          title:'消息',
-          msgType:'suc'
-      });
-    }
+
+  function startGame(){
+    textToast('AR需要取用你的運動傳感器',{
+        faded:false,
+        isbg:true,
+        type:'show',
+        title:'消息',
+        msgType:'suc'
+    });
+  }
 
 
 
@@ -797,7 +833,7 @@ function textToast(msg, option) {
 
   if (showFlag) {
     html += "<div style='margin:3px;text-align: center;'>"
-      + "<input id='confirmEventDiv' type='button' value='确定' style='width:85px;height:30px;color:white;border:none;cursor:pointer;background-color:rgb(187, 28, 28);letter-spacing: 6px;'>"
+      + "<input id='confirmEventDiv' type='button' value='確認' style='width:85px;height:30px;color:white;border:none;cursor:pointer;background-color:rgb(187, 28, 28);letter-spacing: 6px;'>"
       + "<input id='closeEventDiv' type='button' value='取消' style='width:85px;height:30px;color:white;border:none;cursor:pointer;background-color:slategray;margin-left: 20px;letter-spacing: 6px;'>"
   }
 
